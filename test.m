@@ -14,7 +14,7 @@ n = 10;  % Size of compressed data
 % Define starting function
 f = rand(1,N);
 % Store a random subset of points
-[fcomp, pos] = datasample(f(2:N), n-2, 'Replace', false);
+[fcomp, pos] = datasample(f(2:N-1), n-2, 'Replace', false);
 fcomp = [fcomp, f(1), f(N)]; % Store endpoints
 pos = [pos, 1, N];           % Store positions of endpoints
 
@@ -51,7 +51,7 @@ fcompplot(pos) = fcomp;
 figure
 subplot(2, 1, 1)
 hold on
-bar(values(numiter,:))
+bar(values(5,:))
 bar(fcompplot, 'FaceColor', 'Red')
 hold off
 title('Reconstructed Information')
