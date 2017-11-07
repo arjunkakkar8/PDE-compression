@@ -6,11 +6,11 @@
 
 % Set seed
 rng(101)
-Nx = 3168;      % X size of input data
-Ny = 4752;      % Y size of input data
-n = 5900000;     % Size of compressed data
+Nx = 316;      % X size of input data
+Ny = 475;      % Y size of input data
+n = 59000;     % Size of compressed data
 
-compression = n/N^2*100;
+compression = 100*n/(Nx*Ny);
 
 % Import test image
 raw = imread('anotherimg.jpg');     % Read image
