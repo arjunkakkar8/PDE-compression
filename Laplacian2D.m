@@ -1,10 +1,14 @@
 % Implementation of 2D image reconstruction using
 % Laplacian operator
 
+% Proportion of original image stored
+compression = 0.03;
+
 % Import image
-img = imread('image.jpeg');
+img = imread('anotherimg.jpg');
 % Store greyvalues of image
 imggray = double(rgb2gray(img));
+%imggray = imggray(1:2000,1:2000);
 
 % Dimensions of image
 width = size(imggray, 2);  % Must be greater than 2
@@ -12,7 +16,7 @@ height = size(imggray, 1); % Must be greated than 2
 N = width * height;
 
 % Size of compressed data
-n = floor(N * 0.3);
+n = floor(N * compression);
 
 % Random greyvalues for now
 f = reshape(imggray',1,N);
@@ -27,7 +31,6 @@ end
 
 % Confidence diagonal matrix from c
 C = spdiags(c', 0, N, N);
-%C = spdiags([0,1,0,1,0,0]', 0, N, N);
 
 % Generate the Laplacian operator matrix A
 hx = 1;
@@ -54,13 +57,21 @@ xdiagmod = repmat([0, repmat(1./(hx)^2, [1,width-1])], [1, height]);
 ydiag = repmat(1./(hy)^2, [1, N]);
 
 % Create the A matrix using these diagonals
-A = spdiags([ydiag' xdiag' maindiag' xdiagmod' ydiag'], [-width, -1, 0, 1, width], N, N);
+A = spdiags([ydiag' xdiag' maindiag' xdiagmod' ydiag'],...
+    [-width, -1, 0, 1, width], N, N);
 
 % Compute Mext
 Mext = C - (speye(N) - C) * A;
 
-% Compute u = inverse Mext * C * f
+
+disp('Computing the inverse...')
+start = tic;
+% Compute u = inverse Mext * C * f'
 u = Mext\(C * f.');
+stop = toc(start);
+
+disp('Time taken for inverse is')
+disp(stop)
 
 % Create image matrix
 compimg = reshape(u, width, height)';
@@ -71,7 +82,7 @@ splitimg = [imggray(:,1:split),compimg(:,width-split:width)];
 
 % Reconstruct image
 subplot(2, 2, 1)
-imshow(img)
+imshow(mat2gray(imggray))
 title('Original Image')
 subplot(2, 2, 2)
 imshow(mat2gray(compimg))
