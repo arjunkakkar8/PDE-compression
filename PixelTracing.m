@@ -1,12 +1,12 @@
 function conf = PixelTracing(img, d)
-    Kvis = reshape(edge(img, 'log'),1, numel(img));
+    Kvis = reshape(edge(img, 'log')',1, numel(img));
    	width = size(img, 2);
     height = size(img, 1);
     conf = zeros(1,numel(Kvis));
     Q1 = zeros(1,numel(Kvis));
     Q2 = zeros(1,numel(Kvis));
     ilast = -1;
-    Q1(find(conf,1)) = 1;
+    Q1(find(Kvis,1)) = 1;
     
     while numel(find(Q1))~=0
         % find i in Q1 and remove i from Q1
@@ -46,7 +46,6 @@ function conf = PixelTracing(img, d)
             for k=1:numel(neighbors)
                 iN = neighbors(k);
                 if Kvis(k)>0
-                    % check distance TBD
                     if PixelDistance(iN, ilast, img)>d 
                         Q1(iN) = 1;
                         
