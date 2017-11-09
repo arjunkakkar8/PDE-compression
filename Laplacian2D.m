@@ -2,13 +2,13 @@
 % Laplacian operator
 
 % Proportion of original image stored
-compression = 0.03;
+compression = 0.3;
 
 % Import image
 img = imread('anotherimg.jpg');
 % Store greyvalues of image
 imggray = double(rgb2gray(img));
-%imggray = imggray(1:2000,1:2000);
+%imggray = imggray(1:1000,1:1000);
 
 % Dimensions of image
 width = size(imggray, 2);  % Must be greater than 2
@@ -67,7 +67,7 @@ Mext = C - (speye(N) - C) * A;
 disp('Computing the inverse...')
 start = tic;
 % Compute u = inverse Mext * C * f'
-u = Mext\(C * f.');
+u = chol(Mext)\(C * f.');
 stop = toc(start);
 
 disp('Time taken for inverse is')

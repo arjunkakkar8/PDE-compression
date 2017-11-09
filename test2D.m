@@ -61,10 +61,24 @@ end
 
 % Check convergence of the solution by looking at the MSE between the last
 % two iterations
-convergence = mean(mean((values(:,:,2)-values(:,:,1)).^2));
+convergence =sqrt(mean(mean((values(2:Nx+1,2:Ny+1,2)-values(2:Nx+1,2:Ny+1,1)).^2)));
 
 % Finally store the reconstructed compressed image
 compimg = mat2gray(values(:,:,2));
+
+% Compute closeness metrics
+mse = sqrt(mean(mean((values(2:Nx+1,2:Ny+1,2)-g).^2))); % MSE
+absdist = mean(mean(abs(values(2:Nx+1,2:Ny+1,2)-g))); % Absolute Distance
+
+% Closeness message
+closenessmsg = ['The distance between the reconstructed image and the original image is - MSE: ',...
+    num2str(closeness), ', Absolute Distance: ', num2str(absdist),'.'];
+disp(closenessmsg)
+
+% Completion message
+msg = ['The image was created with ', num2str(compression),...
+    '% of the original information and the convergence metric is ', num2str(convergence), '.'];
+disp(msg)
 
 % Display the results of the procedure
 subplot(1, 2, 1)
@@ -73,7 +87,3 @@ title('Original Image')
 subplot(1, 2, 2)
 imshow(compimg)
 title('Compressed Image')
-
-% Completion message
-msg = ['The image was created with ', num2str(compression), '% of the original information and the convergence metric is ', num2str(convergence), '.'];
-disp(msg)
