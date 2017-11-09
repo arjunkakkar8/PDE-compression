@@ -72,7 +72,7 @@ absdist = mean(mean(abs(values(2:Nx+1,2:Ny+1,2)-g))); % Absolute Distance
 
 % Closeness message
 closenessmsg = ['The distance between the reconstructed image and the original image is - MSE: ',...
-    num2str(closeness), ', Absolute Distance: ', num2str(absdist),'.'];
+    num2str(mse), ', Absolute Distance: ', num2str(absdist),'.'];
 disp(closenessmsg)
 
 % Completion message

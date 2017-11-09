@@ -1,5 +1,6 @@
 function conf = PixelTracing(img, d)
-    Kvis = reshape(edge(img, 'log')',1, numel(img));
+    edges = edge(img, 'log');
+    Kvis = reshape(edges',1, numel(img));
    	width = size(img, 2);
     height = size(img, 1);
     conf = zeros(1,numel(Kvis));
@@ -41,7 +42,7 @@ function conf = PixelTracing(img, d)
                 neighbors(4)=j+width;
             end
             
-            neighbors = find(neighbors);
+            neighbors = neighbors(neighbors~=0);
             
             for k=1:numel(neighbors)
                 iN = neighbors(k);
@@ -65,6 +66,6 @@ function dist = PixelDistance(i, j, mat)
     width = size(mat, 2);
     ixy = [ceil(i/width),mod(i, width)];
     jxy = [ceil(j/width),mod(j, width)];
-    dist = ((ixy(1)-jxy(1))^2+(ixy(2)-jxy(2))^2)^.5;
+    dist = sqrt(((ixy(1)-jxy(1))^2+(ixy(2)-jxy(2))^2));
 end
 
