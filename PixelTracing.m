@@ -13,7 +13,7 @@ function conf = PixelTracing(img, d)
         i = find(Q1,1);
         Q1(i) = 0;
         
-        if ismember(i, Kvis)>0
+        if Kvis(i)>0
             conf(i) = 1;
             Kvis(i) = 0;
             Q2(i) = 1;
@@ -43,11 +43,11 @@ function conf = PixelTracing(img, d)
             
             neighbors = find(neighbors);
             
-            for k=1:numel(neihghbors)
+            for k=1:numel(neighbors)
                 iN = neighbors(k);
                 if Kvis(k)>0
                     % check distance TBD
-                    if dist(iN, ilast)>d 
+                    if PixelDistance(iN, ilast, img)>d 
                         Q1(iN) = 1;
                         
                     else
@@ -63,7 +63,7 @@ function conf = PixelTracing(img, d)
 end
 
 function dist = PixelDistance(i, j, mat)
-    width = size(img, 2);
+    width = size(mat, 2);
     ixy = [ceil(i/width),mod(i, width)];
     jxy = [ceil(j/width),mod(j, width)];
     dist = ((ixy(1)-jxy(1))^2+(ixy(2)-jxy(2))^2)^.5;
