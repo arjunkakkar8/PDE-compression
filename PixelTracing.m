@@ -1,11 +1,4 @@
-function dist = PixelDistance(i, j, mat)
-    width = size(img, 2);
-    ixy = [ceil(i/width),mod(i, width)];
-    jxy = [ceil(j/width),mod(j, width)];
-    dist = ((ixy(1)-jxy(1))^2+(ixy(2)-jxy(2))^2)^.5;
-end
-
-function conf = PixelTrace(img, d)
+function conf = PixelTracing(img, d)
     Kvis = reshape(edge(img, 'log'),1, numel(img));
    	width = size(img, 2);
     height = size(img, 1);
@@ -68,3 +61,11 @@ function conf = PixelTrace(img, d)
         end        
     end
 end
+
+function dist = PixelDistance(i, j, mat)
+    width = size(img, 2);
+    ixy = [ceil(i/width),mod(i, width)];
+    jxy = [ceil(j/width),mod(j, width)];
+    dist = ((ixy(1)-jxy(1))^2+(ixy(2)-jxy(2))^2)^.5;
+end
+
