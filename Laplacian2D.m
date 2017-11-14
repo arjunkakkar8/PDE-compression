@@ -2,7 +2,7 @@
 % Laplacian operator
 
 % Proportion of original image stored
-compression = 0.03;
+compression = 0.3;
 
 % Import image
 img = imread('image.jpeg');
@@ -90,3 +90,5 @@ title('Compressed Image')
 subplot(2, 2, [3, 4])
 imshow(mat2gray(splitimg))
 title('Split Image')
+
+
