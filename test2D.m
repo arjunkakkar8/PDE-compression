@@ -8,7 +8,7 @@
 rng(101)
 Nx = 316;      % X size of input data
 Ny = 475;      % Y size of input data
-n = 59000;     % Size of compressed data
+n = 15900;     % Size of compressed data
 
 compression = 100*n/(Nx*Ny);
 
@@ -20,8 +20,14 @@ img = gray(1:Nx, 1:Ny);             % Keep the specified amount
 % Define starting function
 f = img;
 
-% Store a random subset of points
-pos = datasample(1:Nx*Ny, n, 'Replace', false); % Select 5 storage points
+% Proportion of points on edges
+propedge = 0.8;
+
+% Store a random subset of points and edges
+edges = find(edge(img, 'Canny'))';
+edges = datasample(edges, min(floor(n*propedge),length(edges)));
+randompoints = datasample(1:Nx*Ny, max(0, n-length(edges)), 'Replace', false);
+pos = [edges, randompoints];
 fcomp = f(pos);
 
 % Reconstruction
@@ -30,7 +36,7 @@ g(pos) = fcomp;         % Insert the values we know from the compressed vector f
 
 % Initialize the values matrix that stores the image information at every
 % timestep
-numiter = 500;
+numiter = 1000;
 h = 2; % This is technically a combination of h and timestep t
 values = zeros(Nx+2, Ny+2, 2);  % Create a N+2 by N+2 gird
 values(2:Nx+1,2:Ny+1,2) = g;    % Add values in the inner N by N grid
@@ -67,8 +73,8 @@ convergence =sqrt(mean(mean((values(2:Nx+1,2:Ny+1,2)-values(2:Nx+1,2:Ny+1,1)).^2
 compimg = mat2gray(values(:,:,2));
 
 % Compute closeness metrics
-mse = sqrt(mean(mean((values(2:Nx+1,2:Ny+1,2)-g).^2))); % MSE
-absdist = mean(mean(abs(values(2:Nx+1,2:Ny+1,2)-g))); % Absolute Distance
+mse = sqrt(mean(mean((values(2:Nx+1,2:Ny+1,2)-double(f)).^2))); % MSE
+absdist = mean(mean(abs(values(2:Nx+1,2:Ny+1,2)-double(f)))); % Absolute Distance
 
 % Closeness message
 closenessmsg = ['The distance between the reconstructed image and the original image is - MSE: ',...
@@ -80,10 +86,26 @@ msg = ['The image was created with ', num2str(compression),...
     '% of the original information and the convergence metric is ', num2str(convergence), '.'];
 disp(msg)
 
+% Inital point selection message
+initialmsg = ['The proportion of points on the edges was ', num2str(length(edges)/length(fcomp)), '.'];
+disp(initialmsg)
+
+edgepoints = zeros(Nx, Ny);
+edgepoints(edges) = f(edges);
+
+allpoints = zeros(Nx, Ny);
+allpoints(pos)=fcomp;
+
 % Display the results of the procedure
-subplot(1, 2, 1)
+subplot(2, 2, 1)
 imshow(f)
 title('Original Image')
-subplot(1, 2, 2)
+subplot(2, 2, 2)
 imshow(compimg)
 title('Compressed Image')
+subplot(2, 2, 3)
+imshow(edgepoints)
+title('The initial Edge Points')
+subplot(2, 2, 4)
+imshow(allpoints)
+title('All the initial points')
