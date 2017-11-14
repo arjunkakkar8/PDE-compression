@@ -2,13 +2,13 @@
 % Laplacian operator
 
 % Proportion of original image stored
-compression = 0.5;
+compression = 0.106;
 
 % Import image
-img = imread('image.jpeg');
+img = imread('anotherimg.jpg');
 % Store greyvalues of image
 imggray = double(rgb2gray(img));
-%imggray = imggray(1:1000,1:1000);
+imggray = imggray(1:316,1:475);
 
 
 % Detect edges

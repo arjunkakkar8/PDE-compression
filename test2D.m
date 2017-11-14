@@ -8,7 +8,7 @@
 rng(101)
 Nx = 316;      % X size of input data
 Ny = 475;      % Y size of input data
-n = 15900;     % Size of compressed data
+n = 16854;     % Size of compressed data
 
 compression = 100*n/(Nx*Ny);
 
@@ -21,13 +21,20 @@ img = gray(1:Nx, 1:Ny);             % Keep the specified amount
 f = img;
 
 % Proportion of points on edges
-propedge = 0.8;
+propedge = 0;
 
 % Store a random subset of points and edges
 edges = find(edge(img, 'Canny'))';
 edges = datasample(edges, min(floor(n*propedge),length(edges)));
 randompoints = datasample(1:Nx*Ny, max(0, n-length(edges)), 'Replace', false);
 pos = [edges, randompoints];
+
+% Evenly spaced grid for testing
+% pos = zeros(size(img));
+% pos(1:3:size(pos, 1), 1:3:size(pos, 2))=1;
+% pos = find(pos)';
+% compression = 100*length(pos)/(Nx*Ny);
+
 fcomp = f(pos);
 
 % Reconstruction
