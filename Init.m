@@ -1,8 +1,4 @@
 function pos = Init(origimg, ratio, method, propedge)
-    % Set proportion of edge points to be 0.2 by default
-    if nargin < 4
-        propedge = 0.2;
-    end
 
     origSize = numel(origimg);
     compSize = floor(origSize*ratio);
