@@ -14,12 +14,12 @@ function pos = Init(origimg, ratio, method, propedge)
         case 'edgeRand'
             contour = edge(origimg, 'log');
             edges = find(contour)'; 
-            edgeSize = propedge * compSize;
+            edgeSize = floor(propedge .* compSize);
             
             edges = datasample(edges, min(compSize, edgeSize));
             
             nonEdges = find(contour==0);
-            points = datasample(nonEdges, max(0, compSize-edgeSize));
+            points = datasample(nonEdges', max(0, compSize-edgeSize));
             
             pos = [edges points];
         
