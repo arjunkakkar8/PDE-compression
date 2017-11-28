@@ -1,110 +1,76 @@
 % Use the GAToolbox by adding it to your path by specifying its exact
 % address in the Github folder.
 % addpath('/Users/ak23/PDE-compression/genetic')
+% addAttachedFiles(gcp, {'geneticMSE.m'});
 
 IMG = double(rgb2gray(imread('image.jpeg')));
-COMP = 0.4;
-NUMONES = floor(0.4*numel(IMG)); % Number of ones that each individual can have
+IMG = IMG(1:100, 1:100);
+COMP = 0.5;
+NUMONES = floor(COMP*numel(IMG)); % Number of ones that each individual can have
 
-NIND=40;        % Gives the population size
+NIND=70;        % Gives the population size
 MAXGEN=300;     % Gives the number of generations
 NVAR=numel(IMG);% Number of variables
 GGAP=0.9;   
 
-%
-%FieldD = [rep(PRECI,[1,NVAR]);rep([-512;512],[1,NVAR]);rep([1;0;1;1],[1,NVAR])];
-
 % Initial binary population
-candidates = [ones(), zeros()]
-Chrom = crtbp(NIND, NVAR);
+candidates = [ones(1, NUMONES), zeros(1, NVAR-NUMONES)];
+Chrom = zeros(NIND, NVAR);
+for i = 1:NIND
+Chrom(i,:) = candidates(randperm(length(candidates)));
+end
 
+% Initialize generations
 gen = 0;
 
-%Evaluate
-ObjV = objfun(Chrom);
+% Evaluate the objective function
+ObjV = objfun(Chrom, IMG);
+disp(ObjV)
+disp(min(ObjV))
 
 while gen < MAXGEN
     FitnV = ranking(ObjV);
     
     SelCh = select('sus', Chrom, FitnV, GGAP);
     
-    SelCh = recombin('xovsp', SelCh, 0.7);
+    SelCh = recombin('xovdp', SelCh, 0.7);
     
     SelCh = mut(SelCh);
     
-    ObjVSel = objfun1(bs2rv(SelCh, FieldD));
+    % Make each individual adhere to the constraint by limiting the total
+    % number of ones to NUMONES
+    for i=1:size(SelCh,1)
+    if sum(SelCh(i,:)) > NUMONES
+        one = find(SelCh(i, :));
+        one = one(randperm(length(one), NUMONES));
+        sel = zeros(1, NVAR);
+        sel(one) = 1;
+        SelCh(i,:)= sel;
+    elseif sum(SelCh(i,:)) < NUMONES
+        zero = find(~SelCh(i, :));
+        zero = zero(randperm(length(zero), NVAR-NUMONES));
+        sel = ones(1, NVAR);
+        sel(zero) = 0;
+        SelCh(i,:)= sel;
+    end
+    end
+    
+    ObjVSel = objfun(SelCh, IMG);
     
     [Chrom, ObjV] = reins(Chrom, SelCh, 1, 1, ObjV, ObjVSel);
     
     gen = gen+1;
+    disp(gen)
+    disp(min(ObjV))
 end
 
 % Function that iterates over the MSE calculation of the population in
 % Parallel
-function mseV = objfun(indMat)
+function mseV = objfun(indMat, origimg)
 mseV = zeros(size(indMat, 1), 1);
-parfor i=1:size(indMat, 2)
+parfor i=1:size(indMat, 1)
     pos = find(indMat(i,:));
-    mseV(i, 1) = msecalc(origimg, pos);
+    mseV(i, 1) = geneticMSE(origimg, pos);
 end
 end
 
-% Function that computes the mse between an image and its reconstruction
-function mse = msecalc(origimg, pos)
-
-width = size(origimg, 2);  % Must be greater than 2
-height = size(origimg, 1); % Must be greated than 2
-N = width * height;
-
-% Random greyvalues for now
-f = reshape(origimg',1,N);
-
-% Generate confidence vector of length N with n 1's
-c = zeros(1, N);
-knownIndex = randperm(N, length(pos));
-
-for i = 1:numel(knownIndex)
-    c(knownIndex(i)) = 1;
-end
-
-% Confidence diagonal matrix from c
-C = spdiags(c', 0, N, N);
-
-% Generate the Laplacian operator matrix A
-hx = 1;
-hy = 1;
-
-% Define A matrix by defining 3 diagonals
-
-% First define the main diagonal
-maindiag = [-1./(hx)^2-1./(hy)^2,...
-    repmat(-2./(hx)^2-1./(hy)^2, [1, width-2]),...
-    -1./(hx)^2-1./(hy)^2,...
-    repmat([-1./(hx)^2-2./(hy)^2,...
-    repmat(-2./(hx)^2-2./(hy)^2, [1, width-2]),...
-    -1./(hx)^2-2./(hy)^2], [1,height-2]),...
-    -1./(hx)^2-1./(hy)^2,...
-    repmat(-2./(hx)^2-1./(hy)^2, [1, width-2]),...
-    -1./(hx)^2-1./(hy)^2];
-
-% Define the diagonal with x-adjacencies
-xdiag = repmat([repmat(1./(hx)^2, [1,width-1]), 0], [1, height]);
-xdiagmod = repmat([0, repmat(1./(hx)^2, [1,width-1])], [1, height]);
-
-% Define the diagonal with y-adjacencies
-ydiag = repmat(1./(hy)^2, [1, N]);
-
-% Create the A matrix using these diagonals
-A = spdiags([ydiag' xdiag' maindiag' xdiagmod' ydiag'],...
-    [-width, -1, 0, 1, width], N, N);
-
-% Compute Mext
-Mext = C - (speye(N) - C) * A;
-
-u = Mext\(C * f.');
-
-% Create image matrix
-reimg = reshape(u, width, height)';
-
-mse = sqrt(mean2((mat2gray(origimg)-mat2gray(reimg)).^2));
-end

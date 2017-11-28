@@ -10,11 +10,7 @@ f = reshape(origimg',1,N);
 
 % Generate confidence vector of length N with n 1's
 c = zeros(1, N);
-knownIndex = randperm(N, length(pos));
-
-for i = 1:numel(knownIndex)
-    c(knownIndex(i)) = 1;
-end
+c(pos) = 1;
 
 % Confidence diagonal matrix from c
 C = spdiags(c', 0, N, N);
@@ -55,5 +51,5 @@ u = Mext\(C * f.');
 % Create image matrix
 reimg = reshape(u, width, height)';
 
-mse = sqrt(mean2((mat2gray(origimg)-mat2gray(reimg)).^2));
+mse = sqrt(mean(mean((origimg-reimg).^2)));
 end

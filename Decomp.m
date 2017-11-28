@@ -23,11 +23,7 @@ switch method
         
         % Generate confidence vector of length N with n 1's
         c = zeros(1, N);
-        knownIndex = randperm(N, length(pos));
-        
-        for i = 1:numel(knownIndex)
-            c(knownIndex(i)) = 1;
-        end
+        c(pos) = 1;
         
         % Confidence diagonal matrix from c
         C = spdiags(c', 0, N, N);
