@@ -1,42 +1,42 @@
 % Compression + Decompression
 % [origimg, pos0] = Compress('image.jpeg', .1, 'random');
-% reimg0 = Decomp(origimg0, pos0, 'iterative', 200);
+% reimg0 = Decomp(origimg, pos0, 'iterative', 200);
 %
 % [origimg, pos1] = Compress('image.jpeg', .1, 'random');
-% reimg1 = Decomp(origimg1, pos1, 'iterative', 200);
+% reimg1 = Decomp(origimg, pos1, 'iterative', 200);
 % 
 % [origimg, pos2] = Compress('image.jpeg', .1, 'random');
-% reimg2 = Decomp(origimg2, pos2, 'iterative', 200);
+% reimg2 = Decomp(origimg, pos2, 'iterative', 200);
 % 
 % [origimg, pos3] = Compress('image.jpeg', .1, 'random');
-% reimg3 = Decomp(origimg3, pos3, 'iterative', 200);
+% reimg3 = Decomp(origimg, pos3, 'iterative', 200);
 % 
 % [origimg, pos4] = Compress('image.jpeg', .1, 'random');
-% reimg4 = Decomp(origimg4, pos4, 'iterative', 200);
+% reimg4 = Decomp(origimg, pos4, 'iterative', 200);
 % 
 % [origimg, pos5] = Compress('image.jpeg', .1, 'random');
-% reimg5 = Decomp(origimg5, pos5, 'iterative', 200);
+% reimg5 = Decomp(origimg, pos5, 'iterative', 200);
 % 
 % [origimg, pos6] = Compress('image.jpeg', .1, 'random');
-% reimg6 = Decomp(origimg6, pos6, 'iterative', 200);
+% reimg6 = Decomp(origimg, pos6, 'iterative', 200);
 % 
 % [origimg, pos7] = Compress('image.jpeg', .1, 'random');
-% reimg7 = Decomp(origimg7, pos7, 'iterative', 200);
+% reimg7 = Decomp(origimg, pos7, 'iterative', 200);
 % 
 % [origimg, pos8] = Compress('image.jpeg', .1, 'random');
-% reimg8 = Decomp(origimg8, pos8, 'iterative', 200);
+% reimg8 = Decomp(origimg, pos8, 'iterative', 200);
 % 
 % [origimg, pos9] = Compress('image.jpeg', .1, 'random');
-% reimg9 = Decomp(origimg9, pos9, 'iterative', 200);
+% reimg9 = Decomp(origimg, pos9, 'iterative', 200);
 % 
  [origimg, pos10] = Compress('anotherimg.jpg', .44, 'random');
- reimg10 = Decomp(origimg10, pos10, 'iterative', 200);
+ reimg10 = Decomp(origimg, pos10, 'iterative', 200);
 % 
 % [origimg, pos11] = Compress('image.jpeg', .1, 'random');
-% reimg11 = Decomp(origimg11, pos11, 'iterative', 200);
+% reimg11 = Decomp(origimg, pos11, 'iterative', 200);
 % 
 % [origimg, pos12] = Compress('image.jpeg', .1, 'random');
-% reimg12 = Decomp(origimg12, pos12, 'iterative', 200);
+% reimg12 = Decomp(origimg, pos12, 'iterative', 200);
 
 
 % jpeg0 = double(rgb2gray(imread('JPEG Compressed Files/anotherimg0.jpg')));
