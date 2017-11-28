@@ -1,0 +1,57 @@
+% Compression + Decompression
+% [origimg0, pos0] = Compress('image.jpeg', .1, 'random');
+% reimg0 = Decomp(origimg0, pos0, 'iterative', 200);
+%
+% [origimg1, pos1] = Compress('image.jpeg', .1, 'random');
+% reimg1 = Decomp(origimg1, pos1, 'iterative', 200);
+% 
+% [origimg2, pos2] = Compress('image.jpeg', .1, 'random');
+% reimg2 = Decomp(origimg2, pos2, 'iterative', 200);
+% 
+% [origimg3, pos3] = Compress('image.jpeg', .1, 'random');
+% reimg3 = Decomp(origimg3, pos3, 'iterative', 200);
+% 
+% [origimg4, pos4] = Compress('image.jpeg', .1, 'random');
+% reimg4 = Decomp(origimg4, pos4, 'iterative', 200);
+% 
+% [origimg5, pos5] = Compress('image.jpeg', .1, 'random');
+% reimg5 = Decomp(origimg5, pos5, 'iterative', 200);
+% 
+% [origimg6, pos6] = Compress('image.jpeg', .1, 'random');
+% reimg6 = Decomp(origimg6, pos6, 'iterative', 200);
+% 
+% [origimg7, pos7] = Compress('image.jpeg', .1, 'random');
+% reimg7 = Decomp(origimg7, pos7, 'iterative', 200);
+% 
+% [origimg8, pos8] = Compress('image.jpeg', .1, 'random');
+% reimg8 = Decomp(origimg8, pos8, 'iterative', 200);
+% 
+% [origimg9, pos9] = Compress('image.jpeg', .1, 'random');
+% reimg9 = Decomp(origimg9, pos9, 'iterative', 200);
+% 
+ [origimg10, pos10] = Compress('anotherimg.jpg', .44, 'random');
+ reimg10 = Decomp(origimg10, pos10, 'iterative', 200);
+% 
+% [origimg11, pos11] = Compress('image.jpeg', .1, 'random');
+% reimg11 = Decomp(origimg11, pos11, 'iterative', 200);
+% 
+% [origimg12, pos12] = Compress('image.jpeg', .1, 'random');
+% reimg12 = Decomp(origimg12, pos12, 'iterative', 200);
+
+
+% jpeg0 = double(rgb2gray(imread('JPEG Compressed Files/anotherimg0.jpg')));
+% jpeg1 = double(rgb2gray(imread('')));
+% jpeg2 = double(rgb2gray(imread('')));
+% jpeg3 = double(rgb2gray(imread('')));
+% jpeg4 = double(rgb2gray(imread('')));
+% jpeg5 = double(rgb2gray(imread('')));
+% jpeg6 = double(rgb2gray(imread('')));
+% jpeg7 = double(rgb2gray(imread('')));
+% jpeg8 = double(rgb2gray(imread('')));
+% jpeg9 = double(rgb2gray(imread('')));
+ jpeg10 = double(rgb2gray(imread('JPEG Compressed Files/anotherimg10.jpg')));
+% jpeg11 = double(rgb2gray(imread('')));
+% jpeg12 = double(rgb2gray(imread('')));
+
+% Calculate the MSE
+(reimg10-origimg10).^

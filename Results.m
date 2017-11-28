@@ -29,16 +29,16 @@ allpoints = zeros(size(origimg));
 allpoints(pos)=origimg(pos);
 
 % Display the results of the procedure
-subplot(3, 2, 1)
+subplot(2, 2, 1)
 imshow(mat2gray(origimg))
 title('Original Image')
-subplot(3, 2, 2)
+subplot(2, 2, 2)
 imshow(mat2gray(reimg))
 title('Compressed Image')
-subplot(3, 2, 3)
+subplot(2, 2, 3)
 imshow(mat2gray(abs(origimg-reimg)));
 title('Difference between the Original and Compressed Image')
-subplot(3, 2, 4)
+subplot(2, 2, 4)
 imshow(allpoints)
 title('All the initial points')
 

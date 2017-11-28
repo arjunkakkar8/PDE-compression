@@ -2,7 +2,7 @@
 [origimg, pos] = Compress('image.jpeg', .1, 'random');
 
 % 2. Decompression
-reimg = Decomp(origimg, pos, 'explicit');
+reimg = Decomp(origimg, pos, 'iterative', 200);
 
 % Processing
 % Empty step for now
