@@ -1,3 +1,5 @@
+addpath('/Users/ak23/PDE-compression/genetic')
+
 NIND=40;
 MAXGEN=300;
 NVAR=20;
