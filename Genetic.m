@@ -1,34 +1,54 @@
-addpath('/Users/ak23/PDE-compression/genetic')
+% Use the GAToolbox by adding it to your path by specifying its exact
+% address in the Github folder.
+% addpath('/Users/ak23/PDE-compression/genetic')
+% addAttachedFiles(gcp, {'geneticMSE.m'});
 
-NIND=40;
-MAXGEN=300;
-NVAR=20;
-PRECI=20;
-GGAP=0.9;
+IMG = double(rgb2gray(imread('image.jpeg')));
+COMP = 0.1;
+NUMONES = floor(COMP*numel(IMG)); % Number of ones that each individual can have
 
-%
-FieldD = [rep(PRECI,[1,NVAR]);rep([-512;512],[1,NVAR]);rep([1;0;1;1],[1,NVAR])];
+NIND=40;        % Gives the population size
+MAXGEN=10;     % Gives the number of generations
+NVAR=numel(IMG);% Number of variables
+GGAP=1;   
 
-%Initial population
-Chrom = crtbp(NIND, NVAR*PRECI); 
+% Initial binary population
+candidates = [ones(1, NUMONES), zeros(1, NVAR-NUMONES)];
+Chrom = zeros(NIND, NVAR);
+for i = 1:NIND
+Chrom(i,:) = candidates(randperm(length(candidates)));
+end
 
+% Initialize generations
 gen = 0;
 
-%Evaluate
-ObjV = objfun1(bs2rv(Chrom, FieldD));
+% Evaluate the objective function
+ObjV = objfun(Chrom, IMG);
 
 while gen < MAXGEN
-   FitnV = ranking(ObjV); 
-   
-   SelCh = select('sus', Chrom, FitnV, GGAP);
-   
-   SelCh = recombin('xovsp', SelCh, 0.7);
-   
-   SelCh = mut(SelCh);
-   
-   ObjVSel = objfun1(bs2rv(SelCh, FieldD));
-   
-   [Chrom, ObjV] = reins(Chrom, SelCh, 1, 1, ObjV, ObjVSel);
-   
-   gen = gen +1;
+    FitnV = ranking(ObjV);
+    
+    SelCh = select('sus', Chrom, FitnV, GGAP);
+    
+    SelCh = recombin('xovdp', SelCh, 0.7);
+    
+    % SelCh = mut(SelCh);
+    
+    ObjVSel = objfun(SelCh, IMG);
+    
+    [Chrom, ObjV] = reins(Chrom, SelCh, 1, 1, ObjV, ObjVSel);
+    
+    gen = gen+1;
+    disp(gen)
 end
+
+% Function that iterates over the MSE calculation of the population in
+% Parallel
+function mseV = objfun(indMat, origimg)
+mseV = zeros(size(indMat, 1), 1);
+parfor i=1:size(indMat, 1)
+    pos = find(indMat(i,:));
+    mseV(i, 1) = geneticMSE(origimg, pos);
+end
+end
+
