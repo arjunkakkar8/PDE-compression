@@ -1,5 +1,5 @@
 % Function that computes the mse between an image and its reconstruction
-function mse = geneticMSE(origimg, pos)
+function [mse, reimg] = geneticMSE(origimg, pos)
 
 width = size(origimg, 2);  % Must be greater than 2
 height = size(origimg, 1); % Must be greated than 2
