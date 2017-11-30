@@ -13,19 +13,24 @@ function reimg = aniso(origimg, pos, numiter, conduction, K)
     comp(pos) = origimg(pos);
     
     for i = 1:numiter
+        
         % add a boundary to current boundary
-        temp = zeros(Nx+2,Ny+2);
-        temp(2:Nx+1,2:Ny+1) = comp;
+        temp = pad(comp,[1,1],'replicate');
         
         % nearest-neighbor differences
         % north
-        diffN = temp(1:Nx,2:(Ny+1))-temp(2:(Nx+1),2:(Ny+1));
+        % circshift
+        diffN = circshift(temp,[1,0])-temp;
+        diffN = diffN(2:end-1,2:end-1);
         % south
-        diffS = temp(3:(Nx+2),2:(Ny+1))-temp(2:(Nx+1),2:(Ny+1));
+        diffS = circshift(temp,[-1,0])-temp;
+        diffS = diffS(2:end-1,2:end-1);
         % east
-        diffE = temp(2:(Nx+1),3:(Ny+2))-temp(2:(Nx+1),2:(Ny+1));
+        diffE = circshift(temp,[0,1])-temp;
+        diffE = diffE(2:end-1,2:end-1);
         % west
-        diffW = temp(2:(Nx+1),1:Ny)-temp(2:(Nx+1),2:(Ny+1));
+        diffW = circshift(temp,[0,-1])-temp;
+        diffW = diffW(2:end-1,2:end-1);
         
         % conduction coefficients
         switch conduction
@@ -43,6 +48,7 @@ function reimg = aniso(origimg, pos, numiter, conduction, K)
         end
         
         comp = comp + 0.1.*(cN.*diffN+cS.*diffS+cE.*diffE+cW.*diffW); 
+        comp(pos) = origimg(pos);
     end
     
     reimg = comp;
