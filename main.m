@@ -3,6 +3,7 @@
 
 % 2. Decompression
 reimg = Decomp(origimg, pos, 'iterative', 500);
+%reimg = Decomp(origimg, pos, 'aniso', 200);
 
 % Processing
 % Empty step for now
