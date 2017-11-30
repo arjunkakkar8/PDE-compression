@@ -117,4 +117,9 @@ switch method
         disp(msg)
         % Store the values from the completion of the iterations
         reimg = values(2:Nx+1, 2:Ny+1,2);
+        
+    case 'aniso'
+        reimg = aniso(origimg, pos, numiter,'exp',20);
+        
 end
+
