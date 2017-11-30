@@ -4,7 +4,7 @@
 % The method argument can be used to either decompress using an explicit
 % solution or iteratively.
 
-function reimg = Decomp(origimg, pos, method, maxiter, threshold)
+function reimg = Decomp(origimg, pos, method, maxiter, threshold, anisotype, K)
 
 if nargin < 4
     maxiter = 500;
@@ -130,9 +130,9 @@ switch method
         msg = ['The convergence metric is ', num2str(convergence), '.'];
         disp(msg)
         % Store the values from the completion of the iterations
-        reimg = values(2:Nx+1, 2:Ny+1,2);
+        reimg = values(2:Nx+1, 2:Ny+1,2)';
         
     case 'aniso'
-        reimg = aniso(origimg, pos, numiter,'exp',20);
+        reimg = aniso(origimg, pos, maxiter, anisotype, K);
         
 end

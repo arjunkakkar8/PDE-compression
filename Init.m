@@ -19,8 +19,7 @@ function pos = Init(origimg, ratio, method, propedge, inflation)
             
             edges = datasample(edges, min(compSize, edgeSize));
             
-            nonEdges = find(contour==0);
-            points = datasample(nonEdges', max(0, compSize-edgeSize));
+            points = datasample(1:numel(origimg), max(0, compSize-edgeSize));
             
             pos = [edges points];
         

@@ -29,8 +29,8 @@
 % [origimg, pos9] = Compress('image.jpeg', .1, 'random');
 % reimg9 = Decomp(origimg, pos9, 'iterative', 200);
 % 
- [origimg, pos10] = Compress('anotherimg.jpg', .44, 'random');
- reimg10 = Decomp(origimg, pos10, 'iterative', 200);
+ [origimg, pos10] = Compress('anotherimg.jpg', [3168, 4752], .44, 'edgeRand', .7, 2);
+ reimg10 = Decomp(origimg, pos10, 'iterative');
 % 
 % [origimg, pos11] = Compress('image.jpeg', .1, 'random');
 % reimg11 = Decomp(origimg, pos11, 'iterative', 200);
@@ -54,5 +54,5 @@
 % jpeg12 = double(rgb2gray(imread('JPEG Compressed Files/anotherimg12.jpg')));
 
 % Calculate the MSE
-remse = sqrt(mean2((mat2gray(origimg10)-mat2gray(reimg10)).^2));
-jpegmse = sqrt(mean2((mat2gray(origimg10)-mat2gray(jpeg10)).^2));
+remse = sqrt(mean2((mat2gray(origimg)-mat2gray(reimg10')).^2));
+jpegmse = sqrt(mean2((mat2gray(origimg)-mat2gray(jpeg10)).^2));

@@ -7,15 +7,16 @@
 % frac favors wide regions over smaller ones.
 % K is some constant value noise estimator
 function reimg = aniso(origimg, pos, numiter, conduction, K)
+origimg = origimg';
     Nx = size(origimg, 1);
     Ny = size(origimg, 2);
-    comp = zeros(Nx,Ny);
+    comp = rand(Nx,Ny).*255;
     comp(pos) = origimg(pos);
     
     for i = 1:numiter
         
         % add a boundary to current boundary
-        temp = pad(comp,[1,1],'replicate');
+        temp = padarray(comp,[1,1],'replicate');
         
         % nearest-neighbor differences
         % north
@@ -42,15 +43,15 @@ function reimg = aniso(origimg, pos, numiter, conduction, K)
                 
             case 'frac'
                 cN = 1./(1+(diffN/K).^2);
-                cS = 1./(1+(diffN/K).^2);
-                cE = 1./(1+(diffN/K).^2);
-                cW = 1./(1+(diffN/K).^2);     
+                cS = 1./(1+(diffS/K).^2);
+                cE = 1./(1+(diffE/K).^2);
+                cW = 1./(1+(diffW/K).^2);     
         end
         
         comp = comp + 0.1.*(cN.*diffN+cS.*diffS+cE.*diffE+cW.*diffW); 
         comp(pos) = origimg(pos);
     end
     
-    reimg = comp;
+    reimg = comp';
 
 end

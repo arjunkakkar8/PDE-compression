@@ -14,11 +14,11 @@ NVAR=numel(IMG);% Number of variables
 GGAP=0.9;
 
 % Initial binary population
-% candidates = [ones(1, NUMONES), zeros(1, NVAR-NUMONES)];
-% Chrom = zeros(NIND, NVAR);
-% for i = 1:NIND
-% Chrom(i,:) = candidates(randperm(length(candidates)));
-% end
+candidates = [ones(1, NUMONES), zeros(1, NVAR-NUMONES)];
+Chrom = zeros(NIND, NVAR);
+for i = 1:NIND
+Chrom(i,:) = candidates(randperm(length(candidates)));
+end
 
 % Initialize generations
 gen = 0;
@@ -55,7 +55,7 @@ while gen < MAXGEN
         end
     end
     
-    ObjVSel = objfun(SelCh, IMG);
+    [ObjVSel, reimg] = objfun(SelCh, IMG);
     
     [Chrom, ObjV] = reins(Chrom, SelCh, 1, 1, ObjV, ObjVSel);
     
@@ -64,24 +64,25 @@ while gen < MAXGEN
     disp(min(ObjV))
     
     % Final Points from population
-%     points = find(Chrom(1,:));
-%     showpoints = zeros(size(IMG));
-%     showpoints(points) = 1;
-%     subplot(1, 3, 1)
-%     imshow(showpoints);
-%     subplot(1, 3, 2)
-%     imshow(mat2gray(IMG))
-%     subplot(1, 3, 3)
-%     imshow(mat2gray(reimg))
-%     drawnow
+    points = find(Chrom(1,:));
+    showpoints = zeros(size(IMG));
+    showpoints(points) = 1;
+    subplot(1, 3, 1)
+    imshow(showpoints);
+    subplot(1, 3, 2)
+    imshow(mat2gray(IMG))
+    subplot(1, 3, 3)
+    imshow(mat2gray(reimg))
+    drawnow
 end
 
 % Function that iterates over the MSE calculation of the population in
 % Parallel
-function mseV = objfun(indMat, origimg)
+function [mseV, reimg] = objfun(indMat, origimg)
 mseV = zeros(size(indMat, 1), 1);
 parfor i=1:size(indMat, 1)
     pos = find(indMat(i,:));
-    mseV(i, 1) = geneticMSE(origimg, pos);
+    [mseV(i, 1), reimg(:,:,i)] = geneticMSE(origimg, pos);
 end
+reimg = reimg(:,:,1);
 end
