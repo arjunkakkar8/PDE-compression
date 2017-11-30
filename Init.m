@@ -1,4 +1,4 @@
-function pos = Init(origimg, ratio, method, propedge)
+function pos = Init(origimg, ratio, method, propedge, inflation)
 
     origSize = numel(origimg);
     compSize = floor(origSize*ratio);
@@ -12,7 +12,8 @@ function pos = Init(origimg, ratio, method, propedge)
         % randomly select edge points and non-edge points
         % given proportion propedge (default to 0.2)
         case 'edgeRand'
-            contour = edge(origimg, 'log');
+            contour = edge(origimg', 'Roberts', 20);
+            contour = imdilate(contour, strel('disk', inflation));
             edges = find(contour)'; 
             edgeSize = floor(propedge .* compSize);
             

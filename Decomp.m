@@ -4,10 +4,14 @@
 % The method argument can be used to either decompress using an explicit
 % solution or iteratively.
 
-function reimg = Decomp(origimg, pos, method, numiter)
+function reimg = Decomp(origimg, pos, method, maxiter, threshold)
 
 if nargin < 4
-    numiter = 500;
+    maxiter = 500;
+end
+
+if nargin < 5
+    threshold = 1e-4;
 end
 
 switch method
@@ -74,6 +78,8 @@ switch method
         
     case 'iterative'
         
+        origimg = origimg';
+        
         Nx = size(origimg, 1);
         Ny = size(origimg, 2);
         
@@ -92,7 +98,9 @@ switch method
         values(1, 2:Ny+1, 2) = values(2, 2:Ny+1, 2);            % Top Boundary
         values(Nx+2, 2:Ny+1, 2) = values(Nx+1, 2:Ny+1, 2);      % Bottom Boundary
         
-        for iter = 1:numiter
+        disp('Iterating...')
+        start = tic;
+        for iter = 1:maxiter
             % Compute the next iteration using finite difference form of laplacian
             nextiter = values(:,:,2) + (1/h.^2).*(circshift(values(:,:,2), [1,0])...
                 +circshift(values(:,:,2), [-1,0])+circshift(values(:,:,2), [0,1])...
@@ -110,11 +118,17 @@ switch method
             values(:,:,1)=values(:,:,2); % Store last values
             values(:,:,2)=nextiter;         % Update values
             disp(iter);
+            convergence=sqrt(mean2((values(2:Nx+1,2:Ny+1,2)-values(2:Nx+1,2:Ny+1,1)).^2));
+            if convergence < threshold
+                break
+            end
         end
+        stop = toc(start);
+        disp('Time taken to complete convergence is')
+        disp(stop)
         % Display a message with information from the iterative process
-        convergence=sqrt(mean2((values(2:Nx+1,2:Ny+1,2)-values(2:Nx+1,2:Ny+1,1)).^2));
         msg = ['The convergence metric is ', num2str(convergence), '.'];
         disp(msg)
         % Store the values from the completion of the iterations
-        reimg = values(2:Nx+1, 2:Ny+1,2);
+        reimg = values(2:Nx+1, 2:Ny+1,2)';
 end

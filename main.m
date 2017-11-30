@@ -1,8 +1,8 @@
 % 1. Compression
-[origimg, pos] = Compress('image.jpeg', .1, 'random');
+[origimg, pos] = Compress('anotherimg.jpg', [3168, 4752], .1, 'edgeRand', .8, 4);
 
 % 2. Decompression
-reimg = Decomp(origimg, pos, 'iterative', 200);
+reimg = Decomp(origimg, pos, 'iterative', 500);
 
 % Processing
 % Empty step for now
