@@ -1,31 +1,34 @@
 function pos = Init(origimg, ratio, method, propedge, inflation)
 
-    origSize = numel(origimg);
-    compSize = floor(origSize*ratio);
-    
-    % Select initial points based on called method
-    switch method
-        % randomly select initial points
-        case 'random'
-            pos = datasample(1:origSize, compSize, 'Replace', false);
+origSize = numel(origimg);
+compSize = floor(origSize*ratio);
+
+% Select initial points based on called method
+switch method
+    % randomly select initial points
+    case 'random'
+        pos = datasample(1:origSize, compSize, 'Replace', false);
         
         % randomly select edge points and non-edge points
         % given proportion propedge (default to 0.2)
-        case 'edgeRand'
-            contour = edge(origimg', 'Roberts', 20);
-            contour = imdilate(contour, strel('disk', inflation));
-            edges = find(contour)'; 
-            edgeSize = floor(propedge .* compSize);
-            
+    case 'edgeRand'
+        contour = edge(origimg', 'Roberts', 20);
+        contour = imdilate(contour, strel('disk', inflation));
+        edges = find(contour)';
+        edgeSize = floor(propedge .* compSize);
+        if numel(edges)~=0
             edges = datasample(edges, min(compSize, edgeSize));
-            
-            points = datasample(1:numel(origimg), max(0, compSize-edgeSize));
-            
-            pos = [edges points];
+        else
+            edges = [];
+            disp('No edges detected')
+        end
+        points = datasample(1:numel(origimg), max(0, compSize-edgeSize));
         
-        % evenly spaced grid 
+        pos = [edges points];
+        
+        % evenly spaced grid
         % case 'grid'
-            
-    end
+        
+end
 
 end

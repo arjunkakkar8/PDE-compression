@@ -4,14 +4,14 @@
 % The method argument can be used to either decompress using an explicit
 % solution or iteratively.
 
-function reimg = Decomp(origimg, pos, method, maxiter, threshold, anisotype, K)
+function [reimg, stop] = Decomp(origimg, pos, method, maxiter, threshold, anisotype, K)
 
 if nargin < 4
     maxiter = 500;
 end
 
 if nargin < 5
-    threshold = 1e-4;
+    threshold = 1e-3;
 end
 
 switch method
